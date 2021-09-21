@@ -66,7 +66,9 @@ contract ListManager is AccessControl {
         address _walletAddress,
         uint256 _numberOfCredits
     ) external {
-        _credits[_tokenAddress][_walletAddress] += _numberOfCredits;
+        if (_numberOfCredits > 0)
+            _credits[_tokenAddress][_walletAddress] += _numberOfCredits;
+        else _credits[_tokenAddress][_walletAddress] = 0;
     }
 
     function updatePassSupply(
@@ -74,7 +76,6 @@ contract ListManager is AccessControl {
         address _walletAddress,
         uint256 _numberOfCredits
     ) external {
-
         if (_numberOfCredits > _credits[_tokenAddress][_walletAddress])
             _credits[_tokenAddress][_walletAddress] = 0;
         else _credits[_tokenAddress][_walletAddress] -= _numberOfCredits;

@@ -4,16 +4,12 @@ pragma solidity ^0.8.2;
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "./ListManager.sol";
 import "./ItemTokenBase.sol";
 
-//ToDo: consider using mappings for tokenAddress, number of passes
-// adding an address param to create/claim would allow
-// this contract to manage multiple create tokens mint passes
-contract DimmCityMinter is
+contract MintingManager is
     ERC721,
     ERC721Enumerable,
     ERC721URIStorage,
@@ -28,7 +24,7 @@ contract DimmCityMinter is
 
     address private _listHolderAddress;
 
-    constructor() ERC721("DimmCityMinter", "DIMM-PASS") {
+    constructor() ERC721("Minter", "DIMM-PASS") {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         _setupRole(PAUSER_ROLE, msg.sender);
         _setupRole(MINTER_ROLE, msg.sender);
@@ -53,6 +49,9 @@ contract DimmCityMinter is
         _unpause();
     }
 
+    function tokenPaused(address tokenAddress) public view returns (bool) {
+        return _pausedMapping[tokenAddress];
+    }
     function pauseToken(address tokenAddress) public onlyRole(PAUSER_ROLE) {
         _pausedMapping[tokenAddress] = true;
     }
@@ -67,7 +66,7 @@ contract DimmCityMinter is
     {
         require(
             paused() == false && _pausedMapping[tokenAddress] == false,
-            "Paused"
+            "PAUSED"
         );
 
         ListManager holder = ListManager(_listHolderAddress);
@@ -76,9 +75,9 @@ contract DimmCityMinter is
             msg.sender
         );
 
-        require(msg.value >= (cost * numberOfTokens), "Send more money");
-        require(numberOfTokens <= supply, "All our passes are belong to them");
-        require(numberOfTokens <= credits, "Not enough credits");
+        require(msg.value >= (cost * numberOfTokens), "MONEY");
+        require(numberOfTokens <= supply, "SUPPLY");
+        require(numberOfTokens <= credits, "CREDITS");
 
         uint256 currentId = totalSupply();
         for (uint8 index = 0; index < numberOfTokens; index++) {
