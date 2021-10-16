@@ -22,9 +22,14 @@ contract("ListManager", function (accounts) {
     assert.equal(config.credits.valueOf(), 0);
   });
 
+  it("should get a mint pass config", async function () {
+        
+  });
+
+  
   it("should add user credits", async function () {
     const manager = await ListManager.deployed();
-    const walletAddress = accounts[1];// web3.utils.randomHex(42);
+    const walletAddress = accounts[1];
     
     await manager.addUserCredits.sendTransaction(
       manager.address,
@@ -42,7 +47,12 @@ contract("ListManager", function (accounts) {
     assert.equal(result.valueOf(), 10);
   });
 
-  it("should update pass supply", async function () {
+
+  it("should get user credits", async function () {
+        
+  });
+
+  it("should update mint pass supply", async function () {
     const manager = await ListManager.deployed();
     const walletAddress = "0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419";
     await manager.configureToken.sendTransaction(
@@ -71,4 +81,5 @@ contract("ListManager", function (accounts) {
     assert.equal(config.credits.valueOf(), 3);
     assert.equal(config.supply.valueOf(), 993);
   });
+
 });

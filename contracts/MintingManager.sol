@@ -52,6 +52,7 @@ contract MintingManager is
     function tokenPaused(address tokenAddress) public view returns (bool) {
         return _pausedMapping[tokenAddress];
     }
+
     function pauseToken(address tokenAddress) public onlyRole(PAUSER_ROLE) {
         _pausedMapping[tokenAddress] = true;
     }
@@ -69,12 +70,14 @@ contract MintingManager is
             "PAUSED"
         );
 
+
         ListManager holder = ListManager(_listHolderAddress);
         (uint256 supply, uint256 credits, uint256 cost) = holder.getPassConfig(
             tokenAddress,
             msg.sender
         );
 
+        //ToDo: dont charge the OGs
         require(msg.value >= (cost * numberOfTokens), "MONEY");
         require(numberOfTokens <= supply, "SUPPLY");
         require(numberOfTokens <= credits, "CREDITS");
@@ -105,7 +108,7 @@ contract MintingManager is
         uint8 counter;
         for (uint256 index = 0; index <= balance; index++) {
             uint256 tokenId = tokenOfOwnerByIndex(msg.sender, index);
-            if (_passMapping[tokenId] == tokenAddress) {                
+            if (_passMapping[tokenId] == tokenAddress) {
                 _burn(tokenId);
                 token.safeMint(msg.sender);
                 delete _passMapping[tokenId];
@@ -146,6 +149,7 @@ contract MintingManager is
         address to,
         uint256 tokenId
     ) internal override(ERC721, ERC721Enumerable) whenNotPaused {
+        //ToDo: add royalties
         super._beforeTokenTransfer(from, to, tokenId);
     }
 

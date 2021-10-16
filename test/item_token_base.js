@@ -6,8 +6,11 @@ const ItemTokenBase = artifacts.require("ItemTokenBase");
  * See docs: https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript
  */
 contract("ItemTokenBase", function (/* accounts */) {
-  it("should assert true", async function () {
+  it("should be able to be paused", async function () {
     await ItemTokenBase.deployed();
     return assert.isTrue(true);
+  });
+  it("should be able to be unpaused", async function () {
+    await ItemTokenBase.deployed();
   });
 });
