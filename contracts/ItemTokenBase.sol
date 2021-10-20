@@ -8,8 +8,6 @@ import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "./ListManager.sol";
-import "./ItemTokenBase.sol";
 
 contract ItemTokenBase is
     ERC721,
@@ -23,8 +21,9 @@ contract ItemTokenBase is
 
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    uint256 _maxSupply;
+    uint256 _maxSupply = 3000;
     string internal _metaDataUri;
+    mapping(address => uint8) _whitelist;
     Counters.Counter private _tokenIdCounter;
 
     constructor(
@@ -38,8 +37,49 @@ contract ItemTokenBase is
         _metaDataUri = baseUri;
     }
 
+    function getMaxSupply()
+        public
+        view
+        onlyRole(DEFAULT_ADMIN_ROLE)
+        returns (uint256 supply)
+    {
+        return _maxSupply;
+    }
+
+    function setMaxSupply(uint256 supply) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        _maxSupply = supply;
+    }
+
+    function getMetaDataUri() public view returns (string memory uri) {
+        return _metaDataUri;
+    }
+
+    function setMetaDataUri(string memory baseURI)
+        public
+        onlyRole(DEFAULT_ADMIN_ROLE)
+    {
+        _metaDataUri = baseURI;
+    }
+
     function _baseURI() internal view override returns (string memory) {
         return _metaDataUri;
+    }
+
+    function getUserCredits(address wallet)
+        public
+        view
+        returns (uint8 credits)
+    {
+        return _whitelist[wallet];
+    }
+
+    function addUserCredits(address wallet, uint8 credits)
+        public
+        returns (uint8)
+    {       
+        _whitelist[wallet] = _whitelist[wallet] + credits;
+
+        return _whitelist[wallet];
     }
 
     function pause() public onlyRole(PAUSER_ROLE) {
@@ -52,7 +92,7 @@ contract ItemTokenBase is
 
     function safeMint(address to) public onlyRole(MINTER_ROLE) {
         require(paused() == false);
-        require(totalSupply() < _maxSupply, "Out of tokens");
+        require(totalSupply() >= _maxSupply, "Out of tokens");
 
         _safeMint(to, _tokenIdCounter.current());
         _tokenIdCounter.increment();
