@@ -47,64 +47,38 @@ contract("Sporo Rabbit", function (accounts) {
 
     return assert.isTrue(true);
   });
-
-  it("should create a token", async function () {
-    const sut = await SporoRabbit.deployed();
-    return assert.isTrue(false, "Not implemented");
-  });
-  it("should create a mint pass", async function () {
-    const sut = await SporoRabbit.deployed();
-    return assert.isTrue(false, "Not implemented");
-  });
-  it("should transfer a token", async function () {
-    const sut = await SporoRabbit.deployed();
-    return assert.isTrue(false, "Not implemented");
-  });
-  it("should burn a token", async function () {
-    const sut = await SporoRabbit.deployed();
-    return assert.isTrue(false, "Not implemented");
-  });
   // it("should get user whitelist entries", async function () {
   //   const sut = await SporoRabbit.deployed();
   //   return assert.isTrue(false, "Not implemented");
   // });
-  it("should update user whitelist entries", async function () {
+  it("should update user presale entries", async function () {
     const sut = await SporoRabbit.deployed();
     const walletAddress = accounts[1];
-    
-    await sut.addUserCredits.sendTransaction(
-      walletAddress,
-      5
-    );
 
-    await sut.addUserCredits.sendTransaction(
-      walletAddress,
-      5
-    );
+    await sut.addUserCredits.sendTransaction(walletAddress, 5);
+
+    await sut.addUserCredits.sendTransaction(walletAddress, 5);
 
     let result = await sut.getUserCredits(walletAddress);
     assert.equal(result.valueOf(), 10, "Did not add credits to wallet");
 
-    await sut.addUserCredits.sendTransaction(
-      walletAddress,
-      3
-    );
+    await sut.addUserCredits.sendTransaction(walletAddress, 3);
     result = await sut.getUserCredits(walletAddress);
     assert.equal(result.valueOf(), 13, "Did not add credits to wallet");
-    
-    //ToDo: allow substraction
+
+    //ToDo: allow subtraction
     return assert.isTrue(false, "Need to be able to subtract");
   });
   it("should pause minting tokens", async function () {
     const sut = await SporoRabbit.deployed();
     await sut.pause.sendTransaction();
     let isPaused = await sut.paused.call();
-    assert.isTrue(isPaused, 'Did not pause');
-    
+    assert.isTrue(isPaused, "Did not pause");
+
     await sut.unpause.sendTransaction();
     isPaused = await sut.paused.call();
-    assert.isFalse(isPaused, 'Did not unpause');
-    
+    assert.isFalse(isPaused, "Did not unpause");
+
     return assert.isTrue(true);
   });
   it("should pause minting mint passes", async function () {
@@ -112,17 +86,40 @@ contract("Sporo Rabbit", function (accounts) {
     // await sut.pauseMintPasses.sendTransaction();
     // let isPaused = await sut.paused.call();
     // assert.isTrue(isPaused, 'Did not pause');
-    
+
     // await sut.unpauseMintPasses.sendTransaction();
     // isPaused = await sut.paused.call();
     // assert.isFalse(isPaused, 'Did not unpause');
-    
+
     return assert.isTrue(false, "Not implemented");
   });
 
+  it("should create a mint pass", async function () {
+    const sut = await SporoRabbit.deployed();
+    return assert.isTrue(false, "Not implemented");
+  });
+  it("should create a token", async function () {
+    const sut = await SporoRabbit.deployed();
+    return assert.isTrue(false, "Not implemented");
+  });
+  it("should transfer a token", async function () {
+    const sut = await SporoRabbit.deployed();
+    return assert.isTrue(false, "Not implemented");
+  });
+  it("should transfer multiple tokens without royalities", async function () {
+    const sut = await SporoRabbit.deployed();
+    return assert.isTrue(false, "Not implemented");
+  });
+  it("should burn a token", async function () {
+    const sut = await SporoRabbit.deployed();
+    return assert.isTrue(false, "Not implemented");
+  });
+  it("should allow owner to set withdraw address", async function () {
+    const sut = await SporoRabbit.deployed();
+    return assert.isTrue(false, "Not implemented");
+  });
   it("should withdraw funds from contract", async function () {
     const sut = await SporoRabbit.deployed();
     return assert.isTrue(false, "Not implemented");
   });
-    
 });
