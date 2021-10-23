@@ -47,7 +47,7 @@ contract("Sporo Rabbit", function (accounts) {
 
     return assert.isTrue(true);
   });
-  // it("should get user whitelist entries", async function () {
+  // it("should get user presale entries", async function () {
   //   const sut = await SporoRabbit.deployed();
   //   return assert.isTrue(false, "Not implemented");
   // });
